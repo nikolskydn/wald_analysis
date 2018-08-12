@@ -1,0 +1,5 @@
+[
+    {"idxs": [0,1], "ops": ["Median"]}, 
+    {"idxs": [2,3,4], "ops": ["Median"]}, 
+    {"idxs": [5,6], "ops": ["Divide", "Median"]}
+]
