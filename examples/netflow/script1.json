@@ -1,5 +1,7 @@
-[
-    {"idxs": [0,1], "ops": ["Median"]}, 
-    {"idxs": [2,3,4], "ops": ["Median"]}, 
-    {"idxs": [5,6], "ops": ["Divide", "Median"]}
-]
+{
+    "ffhead":["SrcPort","DstPort","Protocol","TCPFlags","ICMP","Octets","Packets"],
+    "sfhead":["SrcPort","DstPort","Protocol","TCPFlags","ICMP","Load"],
+    "action":[{"idxs": [0,1], "ops": ["wo.Number([0,53,123,1900])","wo.Median()"]}, 
+              {"idxs": [2,3,4], "ops": ["wo.Median()"]}, 
+              {"idxs": [5,6], "ops": ["wo.Divide()", "wo.Median()"]}]
+}

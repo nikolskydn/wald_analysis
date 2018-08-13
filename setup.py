@@ -6,7 +6,7 @@ setup(name='wald_analysis', version='0.0.0',
       description='Module performs a sequential analysis of Wald.',
       author='Nikolskii D. N.', author_email='nikolskydn@mail.ru',
       entry_points={'console_scripts': 
-          ['wald_analyze_statistic=wald_analysis.analyze:main',
+          ['wald_analyze=wald_analysis.analyze:main',
            'wald_draw_statistic=wald_analysis.draw_statistic:main',
            'wald_make_statistic=wald_analysis.make_statistic:main']},
 )

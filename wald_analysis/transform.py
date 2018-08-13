@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import numpy as np
+from wald_analysis import operations as wo
 
 class Features(object):
     """ Container for storage of features.
@@ -45,14 +46,6 @@ class Features(object):
         else:
             raise StopIteration
 
-def Median(data):
-    return np.median(data,axis=0)
-
-def Mean(data):
-    return np.mean(data,axis=0)
-
-def Divide(data):
-    return data[:,0]/data[:,1]
 
 class Transformer(object):
     """ Transform first features to second features. 
@@ -60,15 +53,14 @@ class Transformer(object):
     """
   
  
-    def __init__(self,scripts=[{'idxs':slice(None,None,1),
-                                'ops':['Median']}]):
-        self._scripts = scripts
+    def __init__(self,script={'action':[{'idxs':slice(None,None,1),'ops':['Median']}]}):
+        self._script = script
 
     def __call__(self,data):
         stokes = []
-        for script in self._scripts:
-            cols = data[:,script['idxs']]
-            for op in script['ops']:
+        for act in self._script['action']:
+            cols = data[:,act['idxs']]
+            for op in act['ops']:
                 cols = eval(op)(cols)
             stokes.append(cols)
         return np.hstack(stokes)
@@ -81,15 +73,20 @@ if __name__=="__main__":
     ff=Features()
     ff.window=3
 
-    my_scripts = [{'idxs':[0,1],'ops':['Median']},
-                  {'idxs':[2],'ops':['Mean','np.square']},
-                  {'idxs':[3,4],'ops':['Divide','Median']}]
+    my_scripts = {'ffhead':['SrcPort','DstPort','Protocol','TCPFlags','ICMP','Octets','Packets'],
+                  'sfhead':['SrcPort','DstPort','Protocol','TCPFlags','ICMP','Load'],
+                  'action':[{'idxs':[0,1],'ops':['wo.Median()']},
+                  {'idxs':[2],'ops':['wo.Mean()','np.square']},
+                  {'idxs':[3,4],'ops':['wo.Divide()','wo.Median()']},
+                  {'idxs':[5],'ops':['wo.Number([0,3,5])','wo.Median()']}]}
+    print(my_scripts)
+
     Tr=Transformer(my_scripts)
     ff.data = np.array([
-        [1,4,2,3,1],
-        [4,1,5,6,2],
-        [7,0,8,4,2],
-        [0,7,5,2,1],
+        [1,4,2,3,1,4],
+        [4,1,5,6,2,4],
+        [7,0,8,4,2,5],
+        [0,7,5,2,1,5],
     ])
     print(ff.data)
     print(np.array([Tr(elem) for elem in ff]))
